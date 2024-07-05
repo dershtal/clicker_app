@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+    depends_on:
+      - redis
+      - db
+  redis:
+    image: "redis:alpine"
+  db:
+    image: "postgres:13"
+    environment:
+      POSTGRES_DB: clicker_game
+      POSTGRES_USER: clicker_user
+      POSTGRES_PASSWORD: clicker_password
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
